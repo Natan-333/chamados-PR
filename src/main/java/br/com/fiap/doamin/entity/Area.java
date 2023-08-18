@@ -1,20 +1,28 @@
-package br.com.fiap.doamin.entity;
+package br.com.fiap.domain.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GeneratedColumn;
-
-import javax.annotation.processing.Generated;
 
 @Entity
-@Table(name = "TB_AREA", uniqueConstraints ={
-    @UniqueConstraint(name = "UK_NM_AREA", columnNames = {"NM_AREA"})
+@Table(name = "TB_AREA", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_NM_AREA", columnNames = {"NM_AREA"})
 })
-
 public class Area {
-    @Id()
-    @Column( name = "ID_AREA")
-    @GeneratedValue()
-    @SequenceGenerator()
+
+    @Id
+    @Column(name = "ID_AREA")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_AREA")
+    @SequenceGenerator(name = "SQ_AREA", sequenceName = "SQ_AREA")
+    private Long id;
+
+    @Column(name = "NM_AREA", nullable = false)
+    private String nome;
+
+    @Column(name = "DS_AREA")
+    private String descricao;
+
+    public Area() {
+    }
+
     public Area(Long id, String nome, String descricao) {
         this.id = id;
         this.nome = nome;
@@ -25,31 +33,28 @@ public class Area {
         return id;
     }
 
-    public void setId(Long id) {
+    public Area setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public Area setNome(String nome) {
         this.nome = nome;
+        return this;
     }
 
     public String getDescricao() {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
+    public Area setDescricao(String descricao) {
         this.descricao = descricao;
+        return this;
     }
-
-    Long id;
-
-    String nome;
-
-    String descricao;
 
     @Override
     public String toString() {
