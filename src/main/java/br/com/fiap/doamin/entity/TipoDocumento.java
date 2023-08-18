@@ -1,38 +1,56 @@
-package br.com.fiap.doamin.entity;
+package br.com.fiap.domain.entity;
+
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "TB_TP_DOCUMENTO", uniqueConstraints = {
-        @UniqueConstraint(name = "UK_NM_TP_DOCUMENTO", columnNames ={"NM_TP_DOCUMENTO"})
+        @UniqueConstraint(name = "UK_NM_TP_DOCUMENTO", columnNames = {"NM_TP_DOCUMENTO"})
 })
 public class TipoDocumento {
 
+
     @Id
-    @GeneratedValue
-    @SequenceGenerator()
-    @Column(name = "ID_TIPO_DOCUMENTO")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_TP_DOCUMENTO")
+    @SequenceGenerator(name = "SQ_TP_DOCUMENTO", sequenceName = "SQ_TP_DOCUMENTO")
+    @Column(name = "ID_TP_DOCUMENTO")
     private Long id;
 
-    private String Nome;
+    @Column(name = "NM_TP_DOCUMENTO", nullable = false)
+    private String nome;
+
+    public TipoDocumento() {
+    }
 
     public TipoDocumento(Long id, String nome) {
         this.setId(id);
-        setNome(nome);
+        this.setNome(nome);
     }
+
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public TipoDocumento setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getNome() {
-        return Nome;
+        return nome;
     }
 
-    public void setNome(String nome) {
-        Nome = nome;
+    public TipoDocumento setNome(String nome) {
+        this.nome = nome;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "TipoDocumento{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                '}';
     }
 }
