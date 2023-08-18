@@ -1,73 +1,111 @@
 package br.com.fiap;
 
-import br.com.fiap.doamin.entity.TipoDocumento;
+import br.com.fiap.domain.entity.Area;
+import br.com.fiap.domain.entity.Documento;
+import br.com.fiap.domain.entity.TipoDocumento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import javax.swing.*;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
-    EntityManagerFactory factory = Persistence.createEntityManagerFactory("Oracle");
-
-    EntityManager manager = factory.createEntityManager();
-
-    static TipoDocumento findById(long id, EnityManager manager){
-        return.manager
-        }
 
 
-private static tipoDocumento addTipodeDocumento
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("oracle");
 
-    tipoDocumento tipo = new TipoDocumento();
+        EntityManager manager = factory.createEntityManager();
 
-    String nome = JOptionPane.showInputDialog("Tipo de documento");
 
-     try{
+        // Area area = addArea(manager);
 
-     }catch(exception ex){
-         System.err.println("Não foi possível salvar o tipo de documento" + ex,getMessage());
 
-         String erro = """
-                Erro!
-                Não foi possível salvar o tipo de documento.
-                
-                """ + ex.getMessage();
+        // TipoDocumento tipo = addTipoDeDocumento(manager);
 
-         JOptionPane.showMessageDialog(null,"erro");
 
-     }
+        Documento doc = new Documento();
+        doc.setNumero("284739753");
+        doc.setValidade(LocalDate.now().plusYears(5));
+        doc.setTipo(findById(2L, manager));
 
-    Area vendas = new Area();
-
-    String nome = JOptionPane.showInputDialog("Nome da Área");
-    String descricao = JOptionPane.showInputDialog("Descricao da Área");
-
-    vendas.setNome("Vendas"). setDescricao("Vendas Diretas");
-
-    try{
         manager.getTransaction().begin();
-        manager.persist(vendas);
-        manager.getDelegate().comit();
+        manager.persist(doc);
+        manager.getTransaction().commit();
 
-        System.out.println(vendas);
-    catch(Exception ex) {
-        System.out.println(ex.getMessage());
-        JOptionPane.showInputDialog( null, ex.getMessage());
-        }
 
+        System.out.println(doc);
+
+        manager.close();
+        factory.close();
 
     }
 
-    manager.getTransaction().begin();
-    manager.persist(vendas);
-    manager.getTransaction().commit();
 
-    system.out.println(vendas);
+    static TipoDocumento findById(Long id, EntityManager manager) {
+        return manager.find(TipoDocumento.class, id);
+    }
 
-    nagager.close();
-    factory.close();
+    private static TipoDocumento addTipoDeDocumento(EntityManager manager) {
 
+        String nome = JOptionPane.showInputDialog("Tipo de Documento");
+        TipoDocumento tipo = new TipoDocumento();
+        tipo.setNome(nome);
+
+
+        boolean salvou = false;
+
+        do {
+            try {
+                manager.getTransaction().begin();
+                manager.persist(tipo);
+                manager.getTransaction().commit();
+                System.out.println(tipo);
+                salvou = true;
+            } catch (Exception ex) {
+
+                String erro = """
+                        Erro!
+                        Não foi possível salvar o Tipo de Documento.
+                                            
+                        """ + ex.getMessage();
+
+                System.err.println(erro);
+
+                JOptionPane.showMessageDialog(null, erro);
+            }
+        } while (salvou == false);
+
+
+        return tipo;
+    }
+
+    private static Area addArea(EntityManager manager) {
+        Area area = new Area();
+
+        boolean salvou = false;
+
+        do {
+            String nome = JOptionPane.showInputDialog("Nome da Área");
+            String descricao = JOptionPane.showInputDialog("Descrição da Área");
+
+            area.setNome(nome).setDescricao(descricao);
+
+            try {
+                manager.getTransaction().begin();
+                manager.persist(area);
+                manager.getTransaction().commit();
+                System.out.println(area);
+                salvou = true;
+            } catch (Exception ex) {
+                System.out.println("Não foi possível salvar a área. verifique se já existe área com este nome: " + ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Não foi possível salvar a área. verifique se já existe área com este nome: " + ex.getMessage());
+            }
+
+        } while (salvou == false);
+
+        return area;
     }
 }
